@@ -1,6 +1,6 @@
 // These Ugens are wrappers for UGens combinations I often use
 
-IrregularImpulse {
+Dusty {
 	*ar { |freq=40, density=40|
 		^(Impulse.ar(freq) + Dust.ar(density))
 	}
