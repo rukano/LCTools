@@ -75,6 +75,9 @@ CodeDisplayServer {
 			var cmd = m[1];
 			var arguments = m[2..];
 			cmd.switch(
+				\faderate, {
+					fadeRate = argument.first;
+				}
 				\background, {
 					defer{ window.background_( Color(*arguments) ) };
 				},
@@ -82,7 +85,8 @@ CodeDisplayServer {
 					defer{ window.refresh };
 				},
 				\alpha, {
-					defer{ window.alpha_(arguments) };
+					alpha = arguments.first;
+					defer{ window.alpha_(alpha) };
 				},
 				\bounds, {
 					bounds = Rect(*arguments);
