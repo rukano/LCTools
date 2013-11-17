@@ -1,0 +1,9 @@
+TITLE:: LiveBuffer
+RELATED:: Buffer
+SUMMARY:: A class containing two buffers of the same duration. The buffers swap automatically after recording and reusing the active buffer.
+
+SECTION:: Usage
+DESCRIPTION:: When a LiveBuffer is instatiated, two Buffers with the same duration will be allocated. They are internally stored in a Pseq stream, and the next buffer will be called when the method swap is used. The method swap will be automatically used after a recording has been made and used afterwards. The responsible for this autoswap mechanism is a counter, in case the use wants to record several times on the inactive buffer before using it. Using the buffer after the recording resets this counter and swaps the buffers.
+CLASSMETHOD:: new
+
+INSTANCEMETHODS:: record

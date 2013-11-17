@@ -1,12 +1,17 @@
 ////////////////////////////////////////////////////////////////////////
 // Code Display (Client/Server)
-// for easy code displaying
+// for easy code desplaying
+// on SC3 cleints, they can use the:
+// thisProcess.interpreter.codeDump function
+// to directly send code to the server
+// the client is a wrapper for the OSC messages to the server
 
 
 // Roadmap:
-// TODO: use sc objects also as input argument for setting properties
 // TODO: receive characters and display them
 // TODO: visualize typing (keyboard view?)
+
+
 
 /*
 // Start Server
@@ -21,6 +26,8 @@ d.sendCode("asdfasdifjoaidsfjoaf")
 
 d.set(\font, "Menlo", 18)
 d.set(\color, 1, 1, 1, 1)
+
+
 */
 
 CodeDisplayServer {
@@ -69,8 +76,8 @@ CodeDisplayServer {
 			var arguments = m[2..];
 			cmd.switch(
 				\faderate, {
-					fadeRate = argument.first;
-				}
+					fadeRate = arguments.first;
+				},
 				\background, {
 					defer{ window.background_( Color(*arguments) ) };
 				},
@@ -99,7 +106,7 @@ CodeDisplayServer {
 				},
 				\removeAll, {
 					sources = ();
-				}
+				},
 				{ "Command % not found".format(cmd).postln }
 			);
 		}, "/codedisplay/global").permanent_(true);
