@@ -5,39 +5,6 @@ When recording, it uses another buffer.
 The buffers will switch when the .buffer method is used.
 
 // TODO: record from internal buses!
-
-// Usage:
-b = LiveBuffer(1) // create live buffer with duration (in seconds)
-b.record(0) // record input 0
-
-b.activeBuffer
-b.inactiveBuffer
-
-b.record.normalize // record, wait and normalize
-b.record(0, false); // no envelope
-b.buffer.play; // test
-
-// NOTE: if you record more than 2 times in a row, it will use the same buffer.
-// this class has 2 buffers and uses one for playing, and one for recording
-// using the method .buffer switches the active buffer
-// when recording, it stick to one buffer until you use the .buffer method
-
-// example:
-
-// record
-b.record
-
-// play
-b.buffer.play
-
-// these 3 record on the same buffer
-b.record
-b.record
-b.record
-
-// switches the active buffer to the last recorded
-b.bufer.play
-
 */
 
 

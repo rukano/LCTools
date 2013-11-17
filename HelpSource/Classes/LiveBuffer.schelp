@@ -3,8 +3,8 @@ categories:: Buffer
 related:: Classes/Buffer
 summary:: A dual buffer system conceived for recording small pieces of audio in live performances. The buffer playing and the buffer recording are two different buffers to avoid overdubbing and clicks.
 
-SECTION:: Usage
-DESCRIPTION:: When a LiveBuffer is instatiated, two Buffers with the same duration will be allocated. They are internally stored in a Pseq stream, and the next buffer will be called when the method swap is used. The method swap will be automatically used after a recording has been made and used afterwards. The responsible for this autoswap mechanism is a counter, in case the use wants to record several times on the inactive buffer before using it. Using the buffer after the recording resets this counter and swaps the buffers.
+DESCRIPTION:: When a LiveBuffer is instatiated, two Buffers with the same duration will be allocated. They are internally stored in a sequence, and the next buffer will be called when the method swap is used. The method swap will be automatically used after a recording has been made and used afterwards. The responsible for this autoswap mechanism is a counter, in case the use wants to record several times on the inactive buffer before using it. Using the buffer after the recording resets this counter and swaps the buffers.
+
 CLASSMETHODS::
 METHOD:: new
 Creates a new instance with two buffers.
@@ -16,7 +16,7 @@ PRIVATE:: initialized
 
 INSTANCEMETHODS::
 METHOD:: record
-This method swaps the buffers (if necessary, depending on the counter) and records into the STRONG::inactiveBuffer::. Every time record is used, the counter is incremented. The swapping of the buffers happens only when the counter has been resetted (i.e. using the buffer instance method).
+This method swaps the buffers (if necessary, depending on the counter) and records into the LINK::#-inactiveBuffer::. Every time record is used, the counter is incremented. The swapping of the buffers happens only when the counter has been resetted (i.e. using the buffer instance method).
 
 ARGUMENT::in
 SoundIn input bus.
@@ -29,13 +29,58 @@ This method resets the counter and returns the STRONG::activeBuffer::. It is rec
 
 RETURNS:: Buffer
 
-
 METHOD::activeBuffer
-This instance variable holds the buffer that is being played, the last buffer that was returned by STRONG::buffer::.
+This instance variable holds the buffer that will be recorded.
 RETURNS:: Buffer
 
 METHOD::inactiveBuffer
-This instanve veriable holds the buffer that is being recorded.
+This instance variable holds the buffer that is being played.
 
 RETURNS:: Buffer
 
+METHOD::swap
+Swaps the buffers. LINK::#-inactiveBuffer:: becomes the LINK::#-activeBuffer:: and viceversa.
+
+METHOD::free
+Frees both of the buffers.
+
+METHOD::normalize
+Normalizes the LINK::#-activeBuffer:: to STRONG::max:: after the duration of the buffer plus STRONG::lag::.
+
+
+PRIVATE:: buffers
+PRIVATE:: buildSynthDefs
+PRIVATE:: counter
+PRIVATE:: seq
+PRIVATE:: dur
+
+EXAMPLES::
+
+CODE::
+b = LiveBuffer(1) // create live buffer with duration (in seconds)
+b.record(0) // record SoundIn input 0
+
+// check the buffers:
+b.activeBuffer
+b.inactiveBuffer
+
+// record:
+b.record // default record
+b.record.normalize // record, wait and normalize
+b.record(0, false); // no envelope
+b.buffer.play; // test
+
+// using the buffer resets the counter
+b.buffer.play
+
+// recording increments the counter and uses the same buffer until reseted
+// these 3 record on the same buffer
+b.record
+b.record
+b.record
+
+// using the buffer again, resets the counter, leaving it ready for the next swap on the next recording
+b.buffer.play
+
+
+::
