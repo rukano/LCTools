@@ -1,6 +1,6 @@
 // Live midi buffer is the superclass for handling small sequences recorded live for example via midi
 // live midi buffer adds events on a list when it's recording
-// for specializes functions, look at the subclasses
+// for specialized functions, look at the subclasses LiveMidiSeq and LiveMidiRing
 
 LiveMidiBuffer {
 	var <>maxevents;
@@ -73,7 +73,14 @@ LiveMidiBuffer {
 	}
 
 	durations { |addTime=1|
+		// this is tricky, since the last event won't have a duration
+		// that's why you have to give the addTime a duration
+		// to use this as the duration of the last event
 		^this.relativeTimes.put(0,addTime).rotate(-1)
+	}
+
+	dur { |addTime=1| // also convenience method for less typing
+		^this.durations(addTime)
 	}
 
 	seconds {
@@ -106,7 +113,8 @@ LiveMidiSeq : LiveMidiBuffer {
 		var event = this.makeEvent(note, vel);
 		if( recording ) {
 			if ( events.size > maxevents ) {
-				this.stopRecording;
+				// auto stops recording when buffer is full
+				this.stop;
 			} {
 				events.add( event );
 			};
