@@ -7,6 +7,10 @@ The buffers will switch when the .buffer method is used.
 // Usage:
 b = LiveBuffer(1) // create live buffer with duration (in seconds)
 b.record(0) // record input 0
+
+b.activeBuffer
+b.inactiveBuffer
+
 b.record.normalize // record, wait and normalize
 b.record(0, false); // no envelope
 b.buffer.play; // test
@@ -38,7 +42,7 @@ b.bufer.play
 LiveBuffer {
 
 	classvar <>initialized=false;
-	var <>buffers, <>seq, <>dur, <>counter, <>activeBuffer;
+	var <>buffers, <>seq, <>dur, <>counter, <>activeBuffer, <>inactiveBuffer;
 
 	*new { |duration=1|
 		^super.new.init(duration)
@@ -58,7 +62,8 @@ LiveBuffer {
 			Buffer.alloc(Server.default, Server.default.sampleRate * dur)
 		}.dup;
 		seq = Pseq(buffers, inf).asStream;
-		this.buffer;
+		counter = 0;
+		this.swap;
 	}
 
 	buildSynthDefs {
@@ -74,10 +79,7 @@ LiveBuffer {
 
 	record { |in, env=true|
 		counter = counter + 1;
-		counter.postln;
-		if ( (counter > 1).not ) {
-			activeBuffer = seq.next;
-		};
+		if ( (counter > 1).not ) { this.swap };
 		if( env ) {
 			Synth(\EZBufferRecorderSynthEnv, [\in, in, \dur, dur, \buf, activeBuffer]);
 		} {
@@ -85,8 +87,13 @@ LiveBuffer {
 		};
 	}
 
-	normalize {
-		fork{ (dur+0.1).wait; activeBuffer.normalize };
+	swap {
+		inactiveBuffer = activeBuffer;
+		activeBuffer = seq.next;
+	}
+
+	normalize { |max=1, lag=0.1|
+		fork{ (dur+lag).wait; activeBuffer.normalize(max) };
 	}
 
 	free {
