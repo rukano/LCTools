@@ -2,6 +2,10 @@
 // live midi buffer adds events on a list when it's recording
 // for specialized functions, look at the subclasses LiveMidiSeq and LiveMidiRing
 
+// TODO: -makeResponder
+// TODO: LiveMidiDef(\name, type) ??
+// TODO: scdoc
+
 LiveMidiBuffer {
 	var <>maxevents;
 	var <>events;
