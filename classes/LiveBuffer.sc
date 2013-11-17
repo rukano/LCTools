@@ -4,6 +4,8 @@ LiveBuffer is inteded to be used in a NodeProxy or SynthDef using a buffer.
 When recording, it uses another buffer.
 The buffers will switch when the .buffer method is used.
 
+// TODO: record from internal buses!
+
 // Usage:
 b = LiveBuffer(1) // create live buffer with duration (in seconds)
 b.record(0) // record input 0
