@@ -104,6 +104,9 @@ CodeDisplayServer {
 				\clear, {
 					sources.do{ |source| source.code = "" };
 				},
+				\removeAll, {
+					sources = ();
+				}
 				{ "Command % not found".format(cmd).postln }
 			);
 		}, "/codedisplay/global").permanent_(true);
