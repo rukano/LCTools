@@ -102,7 +102,7 @@ CodeDisplayServer {
 					defer{ window.close };
 				},
 				\clear, {
-					// TODO: make function to clear screen
+					sources.do{ |source| source.code = "" };
 				},
 				{ "Command % not found".format(cmd).postln }
 			);
